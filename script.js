@@ -1,6 +1,20 @@
 let scene, camera, renderer, model, controls;
 const container = document.getElementById('container');
 
+// Loading screen
+const loadingScreen = document.createElement('div');
+loadingScreen.id = 'loadingScreen';
+loadingScreen.style.position = 'fixed';
+loadingScreen.style.width = '100%';
+loadingScreen.style.height = '100%';
+loadingScreen.style.backgroundColor = '#ffffff';
+loadingScreen.style.display = 'flex';
+loadingScreen.style.justifyContent = 'center';
+loadingScreen.style.alignItems = 'center';
+loadingScreen.style.fontSize = '24px';
+loadingScreen.innerHTML = 'Loading...<br>Use the controls on the walkman...';
+document.body.appendChild(loadingScreen);
+
 init();
 animate();
 
@@ -12,7 +26,7 @@ function init() {
 
     // Camera setup
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-    camera.position.set(0, 150, 500); // Set the camera position to be closer and higher to the model
+    camera.position.set(0, 150, 500); // Adjust the camera position
     console.log('Camera initialized.');
 
     // Renderer setup
@@ -61,10 +75,15 @@ function init() {
         scene.add(boxHelper);
         console.log('BoxHelper added.');
 
+        // Remove loading screen
+        document.body.removeChild(loadingScreen);
+
         console.log('Model structure:', model);
         setupModelControls();
     }, undefined, function (error) {
         console.error('Error loading model:', error);
+        // Remove loading screen even if there is an error
+        document.body.removeChild(loadingScreen);
     });
 
     // Handle window resize
