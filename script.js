@@ -1,8 +1,3 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.module.js';
-import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.150.1/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.150.1/examples/jsm/loaders/GLTFLoader.js';
-import { RGBELoader } from 'https://cdn.jsdelivr.net/npm/three@0.150.1/examples/jsm/loaders/RGBELoader.js';
-
 let scene, camera, renderer, model, controls;
 const container = document.getElementById('container');
 let audioLoader, listener, sound;
@@ -50,7 +45,7 @@ function init() {
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     pmremGenerator.compileEquirectangularShader();
 
-    new RGBELoader()
+    new THREE.RGBELoader()
         .setDataType(THREE.UnsignedByteType) // set data type
         .load('little_paris_under_tower_1k.hdr', function(texture) {
             const envMap = pmremGenerator.fromEquirectangular(texture).texture;
@@ -61,14 +56,14 @@ function init() {
         });
 
     // OrbitControls setup
-    controls = new OrbitControls(camera, renderer.domElement);
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.25;
     controls.screenSpacePanning = false;
     controls.maxPolarAngle = Math.PI / 2;
 
     // Load model
-    const loader = new GLTFLoader();
+    const loader = new THREE.GLTFLoader();
     loader.load('Buttons/Buttons2.gltf', function(gltf) {
         console.log('Model loaded successfully.');
         model = gltf.scene;
