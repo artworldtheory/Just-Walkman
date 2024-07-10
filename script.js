@@ -11,8 +11,9 @@ function init() {
     console.log('Scene created.');
 
     // Camera setup
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 200, 400); // Adjust the camera position to accommodate larger model
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
+    camera.position.set(0, 1000, 2000); // Adjust the camera position to accommodate larger model
+    camera.lookAt(0, 0, 0);
     console.log('Camera initialized.');
 
     // Renderer setup
@@ -40,6 +41,11 @@ function init() {
     controls.screenSpacePanning = false;
     controls.maxPolarAngle = Math.PI / 2;
 
+    // AxesHelper to visualize the axes
+    const axesHelper = new THREE.AxesHelper(500);
+    scene.add(axesHelper);
+    console.log('AxesHelper added.');
+
     // Load model
     const loader = new THREE.GLTFLoader();
     loader.load('sony_gv-8_video_walkman copy/scene.gltf', function(gltf) {
@@ -49,6 +55,13 @@ function init() {
         model.scale.set(200, 200, 200); // Scale the model up significantly
         scene.add(model);
         camera.lookAt(model.position); // Ensure the camera looks at the model
+
+        // BoxHelper to visualize the model's bounding box
+        const boxHelper = new THREE.BoxHelper(model, 0xff0000);
+        scene.add(boxHelper);
+        console.log('BoxHelper added.');
+
+        console.log('Model structure:', model);
         setupModelControls();
     }, undefined, function (error) {
         console.error('Error loading model:', error);
