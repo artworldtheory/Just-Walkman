@@ -2,10 +2,10 @@ let scene, camera, renderer, model, controls;
 const container = document.getElementById('container');
 let audioLoader, listener, sound;
 let audioFiles = [
-    'assets/11_WIP_.mp3',
-    'assets/86_WIP_.mp3',
-    'assets/90 V1_WIP_.mp3',
-    'assets/91_WIP_.mp3'
+    'Audio/11_WIP_.mp3',
+    'Audio/86_WIP_.mp3',
+    'Audio/90 V1_WIP_.mp3',
+    'Audio/91_WIP_.mp3'
 ];
 let currentAudioIndex = 0;
 
@@ -55,12 +55,12 @@ function init() {
 
     // Load model
     const loader = new THREE.GLTFLoader();
-    loader.load('Buttons/Buttons2.gltf', function(gltf) {
+    loader.load('sony_gv-8_video_walkman/Buttons2.gltf', function(gltf) {
         console.log('Model loaded successfully.');
         model = gltf.scene;
         model.position.set(0, 0, 0);
         model.scale.set(100, 100, 100); // Scale the model to half its previous size
-        model.rotation.x += Math.PI / 1; // Rotate the model by 90 degrees on the x-axis
+        model.rotation.x += Math.PI / 2; // Rotate the model by 90 degrees on the x-axis
         scene.add(model);
         controls.target.set(0, 0, 0); // Ensure the controls target the center of the model
         controls.update();
