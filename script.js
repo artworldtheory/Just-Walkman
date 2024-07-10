@@ -55,7 +55,7 @@ function init() {
 
     // Load model
     const loader = new THREE.GLTFLoader();
-    loader.load('sony_gv-8_video_walkman/Buttons2.gltf', function(gltf) {
+    loader.load('Buttons2.gltf', function(gltf) {
         console.log('Model loaded successfully.');
         model = gltf.scene;
         model.position.set(0, 0, 0);
