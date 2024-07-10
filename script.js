@@ -1,5 +1,6 @@
 let scene, camera, renderer, model, controls;
 const container = document.getElementById('container');
+const loadingScreen = document.getElementById('loadingScreen');
 let audioLoader, listener, sound;
 let audioFiles = [
     'Audio/11_WIP_.mp3',
@@ -15,7 +16,7 @@ function init() {
     console.log('Initializing scene...');
     // Scene setup
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xffffff); // Set background to white
+    scene.background = new THREE.Color(0x000000); // Set background to black
     console.log('Scene created.');
 
     // Camera setup
@@ -25,22 +26,30 @@ function init() {
 
     // Renderer setup
     renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setClearColor(0xffffff); // Set background to white
+    renderer.setClearColor(0x000000); // Set background to black
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1;
     container.appendChild(renderer.domElement);
     console.log('Renderer initialized.');
 
     // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 2); // Increase intensity of ambient light
     scene.add(ambientLight);
     console.log('Ambient light added.');
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-    directionalLight.position.set(1, 1, 1).normalize();
-    scene.add(directionalLight);
-    console.log('Directional light added.');
+
+    const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
+    hemisphereLight.position.set(0, 200, 0);
+    scene.add(hemisphereLight);
+    console.log('Hemisphere light added.');
+
+    const directionalLight1 = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight1.position.set(1, 1, 1).normalize();
+    scene.add(directionalLight1);
+
+    const directionalLight2 = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight2.position.set(-1, -1, -1).normalize();
+    scene.add(directionalLight2);
+    console.log('Directional lights added.');
 
     // Load HDRI environment
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
@@ -74,6 +83,8 @@ function init() {
         controls.update();
 
         setupModelControls();
+        loadingScreen.style.display = 'none';
+        container.style.display = 'block';
     }, undefined, function (error) {
         console.error('Error loading model:', error);
     });
