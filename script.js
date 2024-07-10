@@ -30,12 +30,23 @@ function init() {
     const loader = new THREE.GLTFLoader();
     loader.load('sony_gv-8_video_walkman copy/scene.gltf', function(gltf) {
         model = gltf.scene;
+        model.position.set(0, 0, 0);
+        model.scale.set(1, 1, 1);
         scene.add(model);
         setupModelControls();
+    }, undefined, function (error) {
+        console.error(error);
     });
 
     // Handle window resize
     window.addEventListener('resize', onWindowResize, false);
+
+    // Resume audio context on first user interaction
+    window.addEventListener('click', () => {
+        if (Howler.ctx.state === 'suspended') {
+            Howler.ctx.resume();
+        }
+    });
 }
 
 function setupModelControls() {
