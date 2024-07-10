@@ -12,8 +12,7 @@ function init() {
 
     // Camera setup
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-    camera.position.set(0, 1000, 2000); // Adjust the camera position to accommodate larger model
-    camera.lookAt(0, 0, 0);
+    camera.position.set(0, 150, 500); // Move the camera back to ensure the whole model is visible
     console.log('Camera initialized.');
 
     // Renderer setup
@@ -52,9 +51,10 @@ function init() {
         console.log('Model loaded successfully.');
         model = gltf.scene;
         model.position.set(0, 0, 0);
-        model.scale.set(200, 200, 200); // Scale the model up significantly
+        model.scale.set(100, 100, 100); // Scale the model to half its previous size
         scene.add(model);
-        camera.lookAt(model.position); // Ensure the camera looks at the model
+        controls.target.set(0, 0, 0); // Ensure the controls target the center of the model
+        controls.update();
 
         // BoxHelper to visualize the model's bounding box
         const boxHelper = new THREE.BoxHelper(model, 0xff0000);
