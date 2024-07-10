@@ -28,7 +28,7 @@ function init() {
 
     // Load model
     const loader = new THREE.GLTFLoader();
-    loader.load('scene.gltf', function(gltf) {
+    loader.load('sony_gv-8_video_walkman copy/scene.gltf', function(gltf) {
         model = gltf.scene;
         scene.add(model);
         setupModelControls();
