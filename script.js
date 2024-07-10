@@ -20,7 +20,7 @@ function init() {
 
     // Camera setup
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-    camera.position.set(0, 150, 200); // Move the camera back to ensure the whole model is visible
+    camera.position.set(0, 150, 500); // Move the camera back to ensure the whole model is visible
     console.log('Camera initialized.');
 
     // Renderer setup
@@ -55,12 +55,12 @@ function init() {
 
     // Load model
     const loader = new THREE.GLTFLoader();
-    loader.load('assets/Buttons2.gltf', function(gltf) {
+    loader.load('sony_gv-8_video_walkman/Buttons2.gltf', function(gltf) {
         console.log('Model loaded successfully.');
         model = gltf.scene;
         model.position.set(0, 0, 0);
         model.scale.set(100, 100, 100); // Scale the model to half its previous size
-        model.rotation.x += Math.PI / 1;
+        model.rotation.x += Math.PI / 2; // Rotate the model by 90 degrees on the x-axis
         scene.add(model);
         controls.target.set(0, 0, 0); // Ensure the controls target the center of the model
         controls.update();
