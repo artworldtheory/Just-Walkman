@@ -46,6 +46,7 @@ function init() {
     pmremGenerator.compileEquirectangularShader();
 
     new THREE.RGBELoader()
+        .setDataType(THREE.UnsignedByteType) // set data type
         .load('little_paris_under_tower_1k.hdr', function(texture) {
             const envMap = pmremGenerator.fromEquirectangular(texture).texture;
             scene.background = envMap;
