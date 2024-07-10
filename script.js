@@ -10,6 +10,7 @@ let audioFiles = [
 let currentAudioIndex = 0;
 init();
 animate();
+
 function init() {
     console.log('Initializing scene...');
     // Scene setup
@@ -18,8 +19,7 @@ function init() {
 
     // Camera setup
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-    camera.position.set(0, 150, 100); // Move the camera back to ensure the whole model is visible
-    camera.position.set(0, 150, 100); // Move the camera back to ensure the whole model is visible
+    camera.position.set(0, 150, 50); // Move the camera closer to the model
     console.log('Camera initialized.');
 
     // Renderer setup
@@ -27,6 +27,8 @@ function init() {
     renderer.setClearColor(0xffffff); // Set background to white
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1;
     container.appendChild(renderer.domElement);
     console.log('Renderer initialized.');
 
@@ -38,6 +40,19 @@ function init() {
     directionalLight.position.set(1, 1, 1).normalize();
     scene.add(directionalLight);
     console.log('Directional light added.');
+
+    // Load HDRI background
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    pmremGenerator.compileEquirectangularShader();
+
+    new THREE.RGBELoader()
+        .load('little_paris_under_tower_1k.hdr', function(texture) {
+            const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+            scene.background = envMap;
+            scene.environment = envMap;
+            texture.dispose();
+            pmremGenerator.dispose();
+        });
 
     // OrbitControls setup
     controls = new THREE.OrbitControls(camera, renderer.domElement);
