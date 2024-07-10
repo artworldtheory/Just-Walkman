@@ -60,7 +60,7 @@ function init() {
         model = gltf.scene;
         model.position.set(0, 0, 0);
         model.scale.set(100, 100, 100); // Scale the model to half its previous size
-        model.rotation.x += Math.PI / 2; // Rotate the model by 90 degrees on the x-axis
+        model.rotation.x += Math.PI / 1; // Rotate the model by 90 degrees on the x-axis
         scene.add(model);
         controls.target.set(0, 0, 0); // Ensure the controls target the center of the model
         controls.update();
