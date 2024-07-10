@@ -1,7 +1,3 @@
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { Howl, Howler } from 'howler';
-
 let scene, camera, renderer, model;
 const container = document.getElementById('container');
 
@@ -31,7 +27,7 @@ function init() {
     scene.add(directionalLight);
 
     // Load model
-    const loader = new GLTFLoader();
+    const loader = new THREE.GLTFLoader();
     loader.load('scene.gltf', function(gltf) {
         model = gltf.scene;
         scene.add(model);
