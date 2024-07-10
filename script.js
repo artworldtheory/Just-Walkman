@@ -66,7 +66,6 @@ function init() {
     listener = new THREE.AudioListener();
     camera.add(listener);
     audioLoader = new THREE.AudioLoader();
-}
 
 function setupModelControls() {
     if (!model) {
