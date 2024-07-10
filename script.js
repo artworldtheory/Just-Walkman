@@ -20,7 +20,7 @@ function init() {
 
     // Camera setup
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-    camera.position.set(0, 150, 500); // Move the camera back to ensure the whole model is visible
+    camera.position.set(0, 150, 100); // Move the camera back to ensure the whole model is visible
     console.log('Camera initialized.');
 
     // Renderer setup
@@ -48,11 +48,6 @@ function init() {
     controls.screenSpacePanning = false;
     controls.maxPolarAngle = Math.PI / 2;
 
-    // AxesHelper to visualize the axes
-    const axesHelper = new THREE.AxesHelper(500);
-    scene.add(axesHelper);
-    console.log('AxesHelper added.');
-
     // Load model
     const loader = new THREE.GLTFLoader();
     loader.load('Buttons/Buttons2.gltf', function(gltf) {
@@ -63,17 +58,6 @@ function init() {
         scene.add(model);
         controls.target.set(0, 0, 0); // Ensure the controls target the center of the model
         controls.update();
-
-        // BoxHelper to visualize the model's bounding box
-        const boxHelper = new THREE.BoxHelper(model, 0xff0000);
-        scene.add(boxHelper);
-        console.log('BoxHelper added.');
-
-        console.log('Model structure:', model);
-        setupModelControls();
-    }, undefined, function (error) {
-        console.error('Error loading model:', error);
-    });
 
     // Handle window resize
     window.addEventListener('resize', onWindowResize, false);
