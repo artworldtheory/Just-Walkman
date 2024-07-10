@@ -15,6 +15,7 @@ function init() {
     console.log('Initializing scene...');
     // Scene setup
     scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000); // Set background to black
     console.log('Scene created.');
 
     // Camera setup
@@ -24,7 +25,7 @@ function init() {
 
     // Renderer setup
     renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setClearColor(0xffffff); // Set background to white
+    renderer.setClearColor(0x000000); // Set background to black
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -41,7 +42,7 @@ function init() {
     scene.add(directionalLight);
     console.log('Directional light added.');
 
-    // Load HDRI background
+    // Load HDRI environment
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     pmremGenerator.compileEquirectangularShader();
 
@@ -49,8 +50,7 @@ function init() {
         .setDataType(THREE.UnsignedByteType) // set data type
         .load('little_paris_under_tower_1k.hdr', function(texture) {
             const envMap = pmremGenerator.fromEquirectangular(texture).texture;
-            scene.background = envMap;
-            scene.environment = envMap;
+            scene.environment = envMap; // Use the HDR for environment lighting only
             texture.dispose();
             pmremGenerator.dispose();
         });
@@ -68,7 +68,7 @@ function init() {
         console.log('Model loaded successfully.');
         model = gltf.scene;
         model.position.set(0, 0, 0);
-        model.scale.set(100, 100, 100); // Scale the model to half its previous size
+        model.scale.set(200, 200, 200); // Scale the model to half its previous size
         scene.add(model);
         controls.target.set(0, 0, 0); // Ensure the controls target the center of the model
         controls.update();
