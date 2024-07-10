@@ -158,7 +158,7 @@ function playAudio(url) {
             sound.play();
         });
     } else {
-        if (sound is playing) {
+        if (sound.isPlaying) {
             sound.stop();
         }
         audioLoader.load(url, function(buffer) {
@@ -169,7 +169,7 @@ function playAudio(url) {
 }
 
 function pauseAudio() {
-    if (sound && sound is playing) {
+    if (sound && sound.isPlaying) {
         sound.pause();
     }
 }
