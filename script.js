@@ -12,7 +12,8 @@ function init() {
 
     // Camera setup
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-    camera.position.set(0, 150, 500); // Move the camera back to ensure the whole model is visible
+    camera.position.set(0, 100, 300); // Adjust the camera position to be closer and at an angle
+    camera.rotation.set(-0.5, 0, 0); // Adjust camera angle
     console.log('Camera initialized.');
 
     // Renderer setup
@@ -39,6 +40,8 @@ function init() {
     controls.dampingFactor = 0.25;
     controls.screenSpacePanning = false;
     controls.maxPolarAngle = Math.PI / 2;
+    controls.target.set(0, 50, 0); // Ensure the controls target the center of the model
+    controls.update();
 
     // AxesHelper to visualize the axes
     const axesHelper = new THREE.AxesHelper(500);
@@ -53,8 +56,6 @@ function init() {
         model.position.set(0, 0, 0);
         model.scale.set(100, 100, 100); // Scale the model to half its previous size
         scene.add(model);
-        controls.target.set(0, 0, 0); // Ensure the controls target the center of the model
-        controls.update();
 
         // BoxHelper to visualize the model's bounding box
         const boxHelper = new THREE.BoxHelper(model, 0xff0000);
