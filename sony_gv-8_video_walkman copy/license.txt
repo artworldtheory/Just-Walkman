@@ -1,0 +1,8 @@
+Model Information:
+* title:	Sony GV-8 Video Walkman
+* source:	https://sketchfab.com/3d-models/sony-gv-8-video-walkman-87e0649c22c948f5b20bcaaf8114a9b8
+* author:	Fredrik Johansen (https://sketchfab.com/kird3rf)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works
