@@ -1,4 +1,4 @@
-let scene, camera, renderer, model;
+let scene, camera, renderer, model, controls;
 const container = document.getElementById('container');
 
 init();
@@ -32,6 +32,13 @@ function init() {
     directionalLight.position.set(1, 1, 1).normalize();
     scene.add(directionalLight);
     console.log('Directional light added.');
+
+    // OrbitControls setup
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25;
+    controls.screenSpacePanning = false;
+    controls.maxPolarAngle = Math.PI / 2;
 
     // Load model
     const loader = new THREE.GLTFLoader();
@@ -124,5 +131,6 @@ function onWindowResize() {
 
 function animate() {
     requestAnimationFrame(animate);
+    controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
     renderer.render(scene, camera);
 }
