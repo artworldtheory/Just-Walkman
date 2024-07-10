@@ -1,20 +1,6 @@
 let scene, camera, renderer, model, controls;
 const container = document.getElementById('container');
 
-// Loading screen
-const loadingScreen = document.createElement('div');
-loadingScreen.id = 'loadingScreen';
-loadingScreen.style.position = 'fixed';
-loadingScreen.style.width = '100%';
-loadingScreen.style.height = '100%';
-loadingScreen.style.backgroundColor = '#ffffff';
-loadingScreen.style.display = 'flex';
-loadingScreen.style.justifyContent = 'center';
-loadingScreen.style.alignItems = 'center';
-loadingScreen.style.fontSize = '24px';
-loadingScreen.innerHTML = 'Loading...<br>Use the controls on the walkman...';
-document.body.appendChild(loadingScreen);
-
 init();
 animate();
 
@@ -26,7 +12,7 @@ function init() {
 
     // Camera setup
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-    camera.position.set(0, 150, 500); // Adjust the camera position
+    camera.position.set(0, 150, 500); // Move the camera back to ensure the whole model is visible
     console.log('Camera initialized.');
 
     // Renderer setup
@@ -53,8 +39,6 @@ function init() {
     controls.dampingFactor = 0.25;
     controls.screenSpacePanning = false;
     controls.maxPolarAngle = Math.PI / 2;
-    controls.target.set(0, 50, 0); // Adjust the target slightly above the current position
-    controls.update();
 
     // AxesHelper to visualize the axes
     const axesHelper = new THREE.AxesHelper(500);
@@ -69,21 +53,18 @@ function init() {
         model.position.set(0, 0, 0);
         model.scale.set(100, 100, 100); // Scale the model to half its previous size
         scene.add(model);
+        controls.target.set(0, 0, 0); // Ensure the controls target the center of the model
+        controls.update();
 
         // BoxHelper to visualize the model's bounding box
         const boxHelper = new THREE.BoxHelper(model, 0xff0000);
         scene.add(boxHelper);
         console.log('BoxHelper added.');
 
-        // Remove loading screen
-        document.body.removeChild(loadingScreen);
-
         console.log('Model structure:', model);
         setupModelControls();
     }, undefined, function (error) {
         console.error('Error loading model:', error);
-        // Remove loading screen even if there is an error
-        document.body.removeChild(loadingScreen);
     });
 
     // Handle window resize
