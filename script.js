@@ -12,7 +12,7 @@ function init() {
 
     // Camera setup
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 1, 2);
+    camera.position.set(0, 200, 400); // Adjust the camera position to accommodate larger model
     console.log('Camera initialized.');
 
     // Renderer setup
@@ -46,8 +46,9 @@ function init() {
         console.log('Model loaded successfully.');
         model = gltf.scene;
         model.position.set(0, 0, 0);
-        model.scale.set(1, 1, 1);
+        model.scale.set(200, 200, 200); // Scale the model up significantly
         scene.add(model);
+        camera.lookAt(model.position); // Ensure the camera looks at the model
         setupModelControls();
     }, undefined, function (error) {
         console.error('Error loading model:', error);
