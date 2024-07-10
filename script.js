@@ -18,7 +18,7 @@ function init() {
 
     // Camera setup
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-    camera.position.set(0, 150, 500); // Move the camera back to ensure the whole model is visible
+    camera.position.set(0, 150, 100); // Move the camera back to ensure the whole model is visible
     camera.position.set(0, 150, 100); // Move the camera back to ensure the whole model is visible
     console.log('Camera initialized.');
 
@@ -29,6 +29,7 @@ function init() {
     renderer.setPixelRatio(window.devicePixelRatio);
     container.appendChild(renderer.domElement);
     console.log('Renderer initialized.');
+
     // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 1);
     scene.add(ambientLight);
@@ -37,17 +38,13 @@ function init() {
     directionalLight.position.set(1, 1, 1).normalize();
     scene.add(directionalLight);
     console.log('Directional light added.');
+
     // OrbitControls setup
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.25;
     controls.screenSpacePanning = false;
     controls.maxPolarAngle = Math.PI / 2;
-
-    // AxesHelper to visualize the axes
-    const axesHelper = new THREE.AxesHelper(500);
-    scene.add(axesHelper);
-    console.log('AxesHelper added.');
 
     // Load model
     const loader = new THREE.GLTFLoader();
@@ -60,12 +57,6 @@ function init() {
         controls.target.set(0, 0, 0); // Ensure the controls target the center of the model
         controls.update();
 
-        // BoxHelper to visualize the model's bounding box
-        const boxHelper = new THREE.BoxHelper(model, 0xff0000);
-        scene.add(boxHelper);
-        console.log('BoxHelper added.');
-
-        console.log('Model structure:', model);
         setupModelControls();
     }, undefined, function (error) {
         console.error('Error loading model:', error);
@@ -79,6 +70,7 @@ function init() {
     camera.add(listener);
     audioLoader = new THREE.AudioLoader();
 }
+
 function setupModelControls() {
     if (!model) {
         console.error('Model is not loaded.');
@@ -96,8 +88,10 @@ function setupModelControls() {
     pauseButton.userData = { action: () => { console.log('Pause button pressed.'); pauseAudio(); } };
     forwardButton.userData = { action: () => { console.log('Forward button pressed.'); nextAudio(); } };
     backwardButton.userData = { action: () => { console.log('Backward button pressed.'); previousAudio(); } };
+
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
+
     function onDocumentMouseDown(event) {
         event.preventDefault();
         console.log('Mouse down event detected.');
@@ -117,18 +111,22 @@ function setupModelControls() {
             console.log('No intersections found.');
         }
     }
+
     window.addEventListener('mousedown', onDocumentMouseDown, false);
 }
+
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
+
 function animate() {
     requestAnimationFrame(animate);
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
     renderer.render(scene, camera);
 }
+
 function playAudio(url) {
     if (!sound) {
         sound = new THREE.Audio(listener);
@@ -148,15 +146,18 @@ function playAudio(url) {
         });
     }
 }
+
 function pauseAudio() {
     if (sound && sound.isPlaying) {
         sound.pause();
     }
 }
+
 function nextAudio() {
     currentAudioIndex = (currentAudioIndex + 1) % audioFiles.length;
     playAudio(audioFiles[currentAudioIndex]);
 }
+
 function previousAudio() {
     currentAudioIndex = (currentAudioIndex - 1 + audioFiles.length) % audioFiles.length;
     playAudio(audioFiles[currentAudioIndex]);
