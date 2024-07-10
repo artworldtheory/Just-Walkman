@@ -1,5 +1,13 @@
 let scene, camera, renderer, model, controls;
 const container = document.getElementById('container');
+let audioLoader, listener, sound;
+let audioFiles = [
+    'assets/11_WIP_.mp3',
+    'assets/86_WIP_.mp3',
+    'assets/90 V1_WIP_.mp3',
+    'assets/91_WIP_.mp3'
+];
+let currentAudioIndex = 0;
 
 init();
 animate();
@@ -12,7 +20,7 @@ function init() {
 
     // Camera setup
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-    camera.position.set(0, 150, 500); // Move the camera back to ensure the whole model is visible
+    camera.position.set(0, 150, 200); // Move the camera back to ensure the whole model is visible
     console.log('Camera initialized.');
 
     // Renderer setup
@@ -47,11 +55,12 @@ function init() {
 
     // Load model
     const loader = new THREE.GLTFLoader();
-    loader.load('sony_gv-8_video_walkman copy/scene.gltf', function(gltf) {
+    loader.load('assets/Buttons2.gltf', function(gltf) {
         console.log('Model loaded successfully.');
         model = gltf.scene;
         model.position.set(0, 0, 0);
         model.scale.set(100, 100, 100); // Scale the model to half its previous size
+        model.rotation.x += Math.PI / 1;
         scene.add(model);
         controls.target.set(0, 0, 0); // Ensure the controls target the center of the model
         controls.update();
@@ -70,16 +79,10 @@ function init() {
     // Handle window resize
     window.addEventListener('resize', onWindowResize, false);
 
-    // Resume audio context on first user interaction
-    window.addEventListener('click', () => {
-        if (Howler && Howler.ctx && Howler.ctx.state === 'suspended') {
-            Howler.ctx.resume().then(() => {
-                console.log('Audio context resumed.');
-            }).catch((err) => {
-                console.error('Error resuming audio context:', err);
-            });
-        }
-    });
+    // Create audio listener and loader
+    listener = new THREE.AudioListener();
+    camera.add(listener);
+    audioLoader = new THREE.AudioLoader();
 }
 
 function setupModelControls() {
@@ -88,30 +91,20 @@ function setupModelControls() {
         return;
     }
 
-    const playButton = model.getObjectByName('pCylinder1');
-    const pauseButton = model.getObjectByName('pSphere1_Case1_0');
-    const forwardButton = model.getObjectByName('pSphere3_Case1_0');
-    const backwardButton = model.getObjectByName('pSphere2_Case1_0');
+    const playButton = model.getObjectByName('PlayButton');
+    const pauseButton = model.getObjectByName('PauseButton');
+    const forwardButton = model.getObjectByName('ForwardButton');
+    const backwardButton = model.getObjectByName('BackwardButton');
 
     if (!playButton || !pauseButton || !forwardButton || !backwardButton) {
         console.error('One or more buttons are not found on the model.');
         return;
     }
 
-    const sounds = new Howl({
-        src: ['Audio/11_WIP_.mp3', 'Audio/86_WIP_.mp3', 'Audio/90_V1_WIP_.mp3', 'Audio/91_WIP_.mp3'],
-        sprite: {
-            play: [0, 30000], // Assuming 30 seconds for example
-            pause: [0, 0], // Pause doesn't need a sprite
-            forward: [15000, 30000], // Play from 15s to 45s
-            backward: [0, 15000] // Play from 0s to 15s
-        }
-    });
-
-    playButton.userData = { action: () => { console.log('Play button pressed.'); sounds.play('play'); } };
-    pauseButton.userData = { action: () => { console.log('Pause button pressed.'); sounds.pause(); } };
-    forwardButton.userData = { action: () => { console.log('Forward button pressed.'); sounds.play('forward'); } };
-    backwardButton.userData = { action: () => { console.log('Backward button pressed.'); sounds.play('backward'); } };
+    playButton.userData = { action: () => { console.log('Play button pressed.'); playAudio(audioFiles[currentAudioIndex]); } };
+    pauseButton.userData = { action: () => { console.log('Pause button pressed.'); pauseAudio(); } };
+    forwardButton.userData = { action: () => { console.log('Forward button pressed.'); nextAudio(); } };
+    backwardButton.userData = { action: () => { console.log('Backward button pressed.'); previousAudio(); } };
 
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
@@ -152,4 +145,40 @@ function animate() {
     requestAnimationFrame(animate);
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
     renderer.render(scene, camera);
+}
+
+function playAudio(url) {
+    if (!sound) {
+        sound = new THREE.Audio(listener);
+        audioLoader.load(url, function(buffer) {
+            sound.setBuffer(buffer);
+            sound.setLoop(false);
+            sound.setVolume(0.5);
+            sound.play();
+        });
+    } else {
+        if (sound.isPlaying) {
+            sound.stop();
+        }
+        audioLoader.load(url, function(buffer) {
+            sound.setBuffer(buffer);
+            sound.play();
+        });
+    }
+}
+
+function pauseAudio() {
+    if (sound && sound.isPlaying) {
+        sound.pause();
+    }
+}
+
+function nextAudio() {
+    currentAudioIndex = (currentAudioIndex + 1) % audioFiles.length;
+    playAudio(audioFiles[currentAudioIndex]);
+}
+
+function previousAudio() {
+    currentAudioIndex = (currentAudioIndex - 1 + audioFiles.length) % audioFiles.length;
+    playAudio(audioFiles[currentAudioIndex]);
 }
