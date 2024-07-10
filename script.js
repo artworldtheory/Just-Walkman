@@ -88,7 +88,7 @@ function setupModelControls() {
         return;
     }
 
-    const playButton = model.getObjectByName('pCylinder1_Case1_0');
+    const playButton = model.getObjectByName('pCylinder1');
     const pauseButton = model.getObjectByName('pSphere1_Case1_0');
     const forwardButton = model.getObjectByName('pSphere3_Case1_0');
     const backwardButton = model.getObjectByName('pSphere2_Case1_0');
@@ -129,8 +129,13 @@ function setupModelControls() {
         if (intersects.length > 0) {
             const object = intersects[0].object;
             if (object.userData.action) {
+                console.log('Executing action for:', object.name);
                 object.userData.action();
+            } else {
+                console.log('No action found for:', object.name);
             }
+        } else {
+            console.log('No intersections found.');
         }
     }
 
