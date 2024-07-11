@@ -127,13 +127,13 @@ function setupModelControls() {
         console.error('Model is not loaded.');
         return;
     }
-    const playButton = model.getObjectByName('PlayButton');
-    const pauseButton = model.getObjectByName('PauseButton');
-    const forwardButton = model.getObjectByName('ForwardButton');
-    const backwardButton = model.getObjectByName('BackwardButton');
-    const screen1BaseColor = model.getObjectByName('Screen1_baseColor');
-    const screen1MetallicRoughness = model.getObjectByName('Screen1_metallicRoughness');
-    const screen1Normal = model.getObjectByName('Screen1_normal');
+    const playButton = model.getObjectByName('playButton');
+    const pauseButton = model.getObjectByName('pauseButton');
+    const forwardButton = model.getObjectByName('forwardButton');
+    const backwardButton = model.getObjectByName('backwardButton');
+    const screen1BaseColor = model.getObjectByName('screen1_baseColor');
+    const screen1MetallicRoughness = model.getObjectByName('screen1_metallicRoughness');
+    const screen1Normal = model.getObjectByName('screen1_normal');
 
     console.log("Buttons and Screens:", {
         playButton,
