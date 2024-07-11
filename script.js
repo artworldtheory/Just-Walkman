@@ -9,6 +9,7 @@ let audioFiles = [
     'Audio/91_WIP_.mp3'
 ];
 let currentAudioIndex = 0;
+let shaderMaterial;
 init();
 animate();
 
@@ -96,6 +97,29 @@ function init() {
     listener = new THREE.AudioListener();
     camera.add(listener);
     audioLoader = new THREE.AudioLoader();
+
+    // Create shader material
+    shaderMaterial = new THREE.ShaderMaterial({
+        vertexShader: `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `,
+        fragmentShader: `
+            uniform float iTime;
+            varying vec2 vUv;
+            void main() {
+                vec2 uv = vUv;
+                vec3 col = 0.5 + 0.5 * cos(iTime + uv.xyx + vec3(0, 2, 4));
+                gl_FragColor = vec4(col, 1.0);
+            }
+        `,
+        uniforms: {
+            iTime: { value: 0 }
+        }
+    });
 }
 
 function setupModelControls() {
@@ -107,8 +131,11 @@ function setupModelControls() {
     const pauseButton = model.getObjectByName('PauseButton');
     const forwardButton = model.getObjectByName('ForwardButton');
     const backwardButton = model.getObjectByName('BackwardButton');
-    if (!playButton || !pauseButton || !forwardButton || !backwardButton) {
-        console.error('One or more buttons are not found on the model.');
+    const screen1BaseColor = model.getObjectByName('Screen1_baseColor');
+    const screen1MetallicRoughness = model.getObjectByName('Screen1_metallicRoughness');
+    const screen1Normal = model.getObjectByName('Screen1_normal');
+    if (!playButton || !pauseButton || !forwardButton || !backwardButton || !screen1BaseColor || !screen1MetallicRoughness || !screen1Normal) {
+        console.error('One or more buttons or the screen textures are not found on the model.');
         return;
     }
     playButton.userData = { action: () => { console.log('Play button pressed.'); playAudio(audioFiles[currentAudioIndex]); } };
@@ -140,6 +167,14 @@ function setupModelControls() {
     }
 
     window.addEventListener('mousedown', onDocumentMouseDown, false);
+
+    playButton.userData.action = () => {
+        console.log('Play button pressed.');
+        playAudio(audioFiles[currentAudioIndex]);
+        screen1BaseColor.material = shaderMaterial;
+        screen1MetallicRoughness.material = shaderMaterial;
+        screen1Normal.material = shaderMaterial;
+    };
 }
 
 function onWindowResize() {
@@ -151,6 +186,7 @@ function onWindowResize() {
 function animate() {
     requestAnimationFrame(animate);
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+    shaderMaterial.uniforms.iTime.value += 0.05; // Update time uniform
     renderer.render(scene, camera);
 }
 
