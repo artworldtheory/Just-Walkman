@@ -109,19 +109,27 @@ function init() {
         `,
         fragmentShader: `
             uniform float iTime;
+            uniform vec2 iResolution;
             varying vec2 vUv;
+
+            // Shadertoy shader code
+            void mainImage( out vec4 fragColor, in vec2 fragCoord )
+            {
+                vec2 uv = fragCoord / iResolution.xy;
+                vec3 col = 0.5 + 0.5 * cos(iTime + uv.xyx + vec3(0,2,4));
+                fragColor = vec4(col,1.0);
+            }
+
             void main() {
-                vec2 uv = vUv;
-                vec3 col = 0.5 + 0.5 * cos(iTime + uv.xyx + vec3(0, 2, 4));
-                gl_FragColor = vec4(col, 1.0);
+                mainImage(gl_FragColor, vUv * iResolution.xy);
             }
         `,
         uniforms: {
-            iTime: { value: 0 }
+            iTime: { value: 0 },
+            iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
         }
     });
 }
-
 function setupModelControls() {
     if (!model) {
         console.error('Model is not loaded.');
@@ -131,19 +139,19 @@ function setupModelControls() {
     const pauseButton = model.getObjectByName('PauseButton');
     const forwardButton = model.getObjectByName('ForwardButton');
     const backwardButton = model.getObjectByName('BackwardButton');
-    const glass = model.getObjectByName('Glass');
-    const glassGlass1_0 = model.getObjectByName('Glass_Glass1_0');
+    const glass2 = model.getObjectByName('Glass2');
+    const glass2Glass1_0 = model.getObjectByName('Glass2_Glass1_0');
 
     console.log("Buttons and Screens:", {
         playButton,
         pauseButton,
         forwardButton,
         backwardButton,
-        glass,
-        glassGlass1_0
+        glass2,
+        glass2Glass1_0
     });
 
-    if (!playButton || !pauseButton || !forwardButton || !backwardButton || !glass || !glassGlass1_0) {
+    if (!playButton || !pauseButton || !forwardButton || !backwardButton || !glass2 || !glass2Glass1_0) {
         console.error('One or more buttons or the screen textures are not found on the model.');
         return;
     }
@@ -180,8 +188,8 @@ function setupModelControls() {
     playButton.userData.action = () => {
         console.log('Play button pressed.');
         playAudio(audioFiles[currentAudioIndex]);
-        glass.material = shaderMaterial;
-        glassGlass1_0.material = shaderMaterial;
+        glass2.material = shaderMaterial;
+        glass2Glass1_0.material = shaderMaterial;
     };
 }
 
@@ -189,6 +197,7 @@ function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    shaderMaterial.uniforms.iResolution.value.set(window.innerWidth, window.innerHeight);
 }
 
 function animate() {
