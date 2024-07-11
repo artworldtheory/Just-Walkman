@@ -127,32 +127,32 @@ function setupModelControls() {
         console.error('Model is not loaded.');
         return;
     }
-    const playButton = model.getObjectByName('PlayButton');
-    const pauseButton = model.getObjectByName('PauseButton');
-    const forwardButton = model.getObjectByName('ForwardButton');
-    const backwardButton = model.getObjectByName('BackwardButton');
-    const screen1BaseColor = model.getObjectByName('Screen1_baseColor');
-    const screen1MetallicRoughness = model.getObjectByName('Screen1_metallicRoughness');
-    const screen1Normal = model.getObjectByName('Screen1_normal');
+    const PlayButton = model.getObjectByName('PlayButton');
+    const PauseButton = model.getObjectByName('PauseButton');
+    const ForwardButton = model.getObjectByName('ForwardButton');
+    const BackwardButton = model.getObjectByName('BackwardButton');
+    const Screen1_baseColor = model.getObjectByName('Screen1_baseColor');
+    const Screen1_metallicRoughness = model.getObjectByName('Screen1_metallicRoughness');
+    const Screen1_normal = model.getObjectByName('Screen1_normal');
 
     console.log("Buttons and Screens:", {
-        playButton,
-        pauseButton,
-        forwardButton,
-        backwardButton,
-        screen1BaseColor,
-        screen1MetallicRoughness,
-        screen1Normal
+        PlayButton,
+        PauseButton,
+        ForwardButton,
+        BackwardButton,
+        Screen1_baseColor,
+        Screen1_metallicRoughness,
+        Screen1_normal
     });
 
-    if (!playButton || !pauseButton || !forwardButton || !backwardButton || !screen1BaseColor || !screen1MetallicRoughness || !screen1Normal) {
+    if (!PlayButton || !PauseButton || !ForwardButton || !BackwardButton || !Screen1_baseColor || !Screen1_metallicRoughness || !Screen1_normal) {
         console.error('One or more buttons or the screen textures are not found on the model.');
         return;
     }
-    playButton.userData = { action: () => { console.log('Play button pressed.'); playAudio(audioFiles[currentAudioIndex]); } };
-    pauseButton.userData = { action: () => { console.log('Pause button pressed.'); pauseAudio(); } };
-    forwardButton.userData = { action: () => { console.log('Forward button pressed.'); nextAudio(); } };
-    backwardButton.userData = { action: () => { console.log('Backward button pressed.'); previousAudio(); } };
+    PlayButton.userData = { action: () => { console.log('Play button pressed.'); playAudio(audioFiles[currentAudioIndex]); } };
+    PauseButton.userData = { action: () => { console.log('Pause button pressed.'); pauseAudio(); } };
+    ForwardButton.userData = { action: () => { console.log('Forward button pressed.'); nextAudio(); } };
+    BackwardButton.userData = { action: () => { console.log('Backward button pressed.'); previousAudio(); } };
 
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
@@ -179,12 +179,12 @@ function setupModelControls() {
 
     window.addEventListener('mousedown', onDocumentMouseDown, false);
 
-    playButton.userData.action = () => {
+    PlayButton.userData.action = () => {
         console.log('Play button pressed.');
         playAudio(audioFiles[currentAudioIndex]);
-        screen1BaseColor.material = shaderMaterial;
-        screen1MetallicRoughness.material = shaderMaterial;
-        screen1Normal.material = shaderMaterial;
+        Screen1_baseColor.material = shaderMaterial;
+        Screen1_metallicRoughness.material = shaderMaterial;
+        Screen1_normal.material = shaderMaterial;
     };
 }
 
@@ -236,3 +236,4 @@ function previousAudio() {
     currentAudioIndex = (currentAudioIndex - 1 + audioFiles.length) % audioFiles.length;
     playAudio(audioFiles[currentAudioIndex]);
 }
+
