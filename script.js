@@ -134,6 +134,17 @@ function setupModelControls() {
     const screen1BaseColor = model.getObjectByName('Screen1_baseColor');
     const screen1MetallicRoughness = model.getObjectByName('Screen1_metallicRoughness');
     const screen1Normal = model.getObjectByName('Screen1_normal');
+
+    console.log("Buttons and Screens:", {
+        playButton,
+        pauseButton,
+        forwardButton,
+        backwardButton,
+        screen1BaseColor,
+        screen1MetallicRoughness,
+        screen1Normal
+    });
+
     if (!playButton || !pauseButton || !forwardButton || !backwardButton || !screen1BaseColor || !screen1MetallicRoughness || !screen1Normal) {
         console.error('One or more buttons or the screen textures are not found on the model.');
         return;
