@@ -16,17 +16,17 @@ function init() {
     console.log('Initializing scene...');
     // Scene setup
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x000000); // Set background to black
+    scene.background = new THREE.Color(0x1a1a1a); // Set background to a lighter shade
     console.log('Scene created.');
 
     // Camera setup
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-    camera.position.set(0, 75, 25); // Move the camera closer to the model
+    camera.position.set(0, 50, 20); // Move the camera closer to the model
     console.log('Camera initialized.');
 
     // Renderer setup
     renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setClearColor(0x000000); // Set background to black
+    renderer.setClearColor(0x1a1a1a); // Set background to a lighter shade
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
     container.appendChild(renderer.domElement);
@@ -77,7 +77,7 @@ function init() {
         console.log('Model loaded successfully.');
         model = gltf.scene;
         model.position.set(0, 0, 0);
-        model.scale.set(100, 100, 100); // Scale the model to half its previous size
+        model.scale.set(200, 200, 200); // Scale the model up
         scene.add(model);
         controls.target.set(0, 0, 0); // Ensure the controls target the center of the model
         controls.update();
