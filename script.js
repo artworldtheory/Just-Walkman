@@ -219,39 +219,8 @@ function init() {
     listener = new THREE.AudioListener();
     camera.add(listener);
     audioLoader = new THREE.AudioLoader();
-
-    // Create shader material
-    shaderMaterial = new THREE.ShaderMaterial({
-        vertexShader: `
-            varying vec2 vUv;
-            void main() {
-                vUv = uv;
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            }
-        `,
-        fragmentShader: `
-            uniform float iTime;
-            uniform vec2 iResolution;
-            varying vec2 vUv;
-
-            // Shadertoy shader code
-            void mainImage( out vec4 fragColor, in vec2 fragCoord )
-            {
-                vec2 uv = fragCoord / iResolution.xy;
-                vec3 col = 0.5 + 0.5 * cos(iTime + uv.xyx + vec3(0,2,4));
-                fragColor = vec4(col,1.0);
-            }
-
-            void main() {
-                mainImage(gl_FragColor, vUv * iResolution.xy);
-            }
-        `,
-        uniforms: {
-            iTime: { value: 0 },
-            iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
-        }
-    });
 }
+
 function setupModelControls() {
     if (!model) {
         console.error('Model is not loaded.');
@@ -310,8 +279,8 @@ function setupModelControls() {
     playButton.userData.action = () => {
         console.log('Play button pressed.');
         playAudio(audioFiles[currentAudioIndex]);
-        glass2.material = shaderMaterial;
-        glass2Glass1_0.material = shaderMaterial;
+        glass2.material = shaderMaterial1; // Use the first shader initially
+        glass2Glass1_0.material = shaderMaterial1; // Use the first shader initially
     };
 }
 
@@ -319,7 +288,8 @@ function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    shaderMaterial.uniforms.iResolution.value.set(window.innerWidth, window.innerHeight);
+    shaderMaterial1.uniforms.iResolution.value.set(window.innerWidth, window.innerHeight);
+    shaderMaterial2.uniforms.iResolution.value.set(window.innerWidth, window.innerHeight);
 }
 
 function animate() {
@@ -330,7 +300,6 @@ function animate() {
     shaderMaterial2.uniforms.iTime.value = time;
     renderer.render(scene, camera);
 }
-
 
 function playAudio(url) {
     if (!sound) {
@@ -352,7 +321,7 @@ function playAudio(url) {
     }
 
     // Change shader based on the current audio track
-    if (url === audioFiles[1]) {
+    if (url === audioFiles[1]) { // Check if the second audio file is played
         glass2.material = shaderMaterial2;
         glass2Glass1_0.material = shaderMaterial2;
     } else {
@@ -376,4 +345,3 @@ function previousAudio() {
     currentAudioIndex = (currentAudioIndex - 1 + audioFiles.length) % audioFiles.length;
     playAudio(audioFiles[currentAudioIndex]);
 }
-
