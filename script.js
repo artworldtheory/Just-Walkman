@@ -131,7 +131,7 @@ let audioFiles = [
     'Audio/91_WIP_.mp3'
 ];
 let currentAudioIndex = 0;
-let shaderMaterial;
+let glass2, glass2Glass1_0;
 init();
 animate();
 
@@ -139,24 +139,24 @@ function init() {
     console.log('Initializing scene...');
     // Scene setup
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x1a1a1a); // Set background to a lighter shade
+    scene.background = new THREE.Color(0x1a1a1a);
     console.log('Scene created.');
 
     // Camera setup
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-    camera.position.set(0, 50, 20); // Move the camera closer to the model
+    camera.position.set(0, 50, 20);
     console.log('Camera initialized.');
 
     // Renderer setup
     renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setClearColor(0x1a1a1a); // Set background to a lighter shade
+    renderer.setClearColor(0x1a1a1a);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
     container.appendChild(renderer.domElement);
     console.log('Renderer initialized.');
 
     // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 2); // Increase intensity of ambient light
+    const ambientLight = new THREE.AmbientLight(0xffffff, 2);
     scene.add(ambientLight);
     console.log('Ambient light added.');
 
@@ -179,10 +179,10 @@ function init() {
     pmremGenerator.compileEquirectangularShader();
 
     new THREE.RGBELoader()
-        .setDataType(THREE.UnsignedByteType) // set data type
+        .setDataType(THREE.UnsignedByteType)
         .load('little_paris_under_tower_1k.hdr', function(texture) {
             const envMap = pmremGenerator.fromEquirectangular(texture).texture;
-            scene.environment = envMap; // Use the HDR for environment lighting only
+            scene.environment = envMap;
             texture.dispose();
             pmremGenerator.dispose();
         });
@@ -200,9 +200,9 @@ function init() {
         console.log('Model loaded successfully.');
         model = gltf.scene;
         model.position.set(0, 0, 0);
-        model.scale.set(200, 200, 200); // Scale the model up
+        model.scale.set(200, 200, 200);
         scene.add(model);
-        controls.target.set(0, 0, 0); // Ensure the controls target the center of the model
+        controls.target.set(0, 0, 0);
         controls.update();
 
         setupModelControls();
@@ -230,8 +230,8 @@ function setupModelControls() {
     const pauseButton = model.getObjectByName('PauseButton');
     const forwardButton = model.getObjectByName('ForwardButton');
     const backwardButton = model.getObjectByName('BackwardButton');
-    const glass2 = model.getObjectByName('Glass2');
-    const glass2Glass1_0 = model.getObjectByName('Glass2_Glass1_0');
+    glass2 = model.getObjectByName('Glass2_Glass2_0');
+    glass2Glass1_0 = model.getObjectByName('Glass2_Glass1_0');
 
     console.log("Buttons and Screens:", {
         playButton,
@@ -279,8 +279,8 @@ function setupModelControls() {
     playButton.userData.action = () => {
         console.log('Play button pressed.');
         playAudio(audioFiles[currentAudioIndex]);
-        glass2.material = shaderMaterial1; // Use the first shader initially
-        glass2Glass1_0.material = shaderMaterial1; // Use the first shader initially
+        glass2.material = shaderMaterial1;
+        glass2Glass1_0.material = shaderMaterial1;
     };
 }
 
@@ -322,11 +322,19 @@ function playAudio(url) {
 
     // Change shader based on the current audio track
     if (url === audioFiles[1]) { // Check if the second audio file is played
-        glass2.material = shaderMaterial2;
-        glass2Glass1_0.material = shaderMaterial2;
+        if (glass2 && glass2Glass1_0) {
+            glass2.material = shaderMaterial2;
+            glass2Glass1_0.material = shaderMaterial2;
+        } else {
+            console.error('glass2 or glass2Glass1_0 is not defined');
+        }
     } else {
-        glass2.material = shaderMaterial1;
-        glass2Glass1_0.material = shaderMaterial1;
+        if (glass2 && glass2Glass1_0) {
+            glass2.material = shaderMaterial1;
+            glass2Glass1_0.material = shaderMaterial1;
+        } else {
+            console.error('glass2 or glass2Glass1_0 is not defined');
+        }
     }
 }
 
