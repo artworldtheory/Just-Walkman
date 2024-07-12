@@ -219,7 +219,7 @@ function init() {
 
         setupModelControls();
         loadingScreen.style.display = 'none';
-        container.style.display = 'block');
+        container.style.display = 'block';
     }, undefined, function (error) {
         console.error('Error loading model:', error);
     });
@@ -403,4 +403,3 @@ function previousAudio() {
     currentAudioIndex = (currentAudioIndex - 1 + audioFiles.length) % audioFiles.length;
     playAudio(audioFiles[currentAudioIndex]);
 }
-
