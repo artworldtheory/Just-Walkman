@@ -129,7 +129,7 @@ const shaderMaterial2 = new THREE.ShaderMaterial({
     fragmentShader: fragmentShader2
 });
 
-let video, videoTexture, videoMaterial, videoPlane;
+let video, videoTexture, videoMaterial;
 
 let scene, camera, renderer, model, controls;
 const container = document.getElementById('container');
@@ -212,7 +212,7 @@ function init() {
         console.log('Model loaded successfully.');
         model = gltf.scene;
         model.position.set(0, 0, 0);
-        model.scale.set(200, 200, 200);
+        model.scale.set(400, 400, 400); // Scale up by 100%
         scene.add(model);
         controls.target.set(0, 0, 0);
         controls.update();
@@ -244,13 +244,6 @@ function init() {
     videoTexture.format = THREE.RGBFormat;
 
     videoMaterial = new THREE.MeshBasicMaterial({ map: videoTexture });
-
-    // Create plane for video
-    const videoPlaneGeometry = new THREE.PlaneGeometry(50, 50); // Scale down by 50%
-    videoPlane = new THREE.Mesh(videoPlaneGeometry, videoMaterial);
-    videoPlane.position.set(0, 0, 10); // Adjust position to place in front of Glass2
-    videoPlane.visible = false;
-    scene.add(videoPlane);
 }
 
 function setupModelControls() {
@@ -365,9 +358,8 @@ function playAudio(url) {
     } else if (url === audioFiles[2]) { // Check if the third audio file is played
         if (Glass2 && Glass2_Glass1_0) {
             console.log('Applying videoMaterial');
-            Glass2.material = shaderMaterial1;
-            Glass2_Glass1_0.material = shaderMaterial1;
-            videoPlane.visible = true;
+            Glass2.material = videoMaterial;
+            Glass2_Glass1_0.material = videoMaterial;
             video.play();
         } else {
             console.error('Glass2 or Glass2_Glass1_0 is not defined');
@@ -377,8 +369,6 @@ function playAudio(url) {
             console.log('Applying shaderMaterial1');
             Glass2.material = shaderMaterial1;
             Glass2_Glass1_0.material = shaderMaterial1;
-            videoPlane.visible = false;
-            video.pause();
         } else {
             console.error('Glass2 or Glass2_Glass1_0 is not defined');
         }
