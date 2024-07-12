@@ -131,7 +131,7 @@ let audioFiles = [
     'Audio/91_WIP_.mp3'
 ];
 let currentAudioIndex = 0;
-let glass2, glass2Glass1_0;
+let Glass1, Glass2_Glass1_0;
 init();
 animate();
 
@@ -226,30 +226,30 @@ function setupModelControls() {
         console.error('Model is not loaded.');
         return;
     }
-    const playButton = model.getObjectByName('PlayButton');
-    const pauseButton = model.getObjectByName('PauseButton');
-    const forwardButton = model.getObjectByName('ForwardButton');
-    const backwardButton = model.getObjectByName('BackwardButton');
-    glass2 = model.getObjectByName('Glass2_Glass2_0');
-    glass2Glass1_0 = model.getObjectByName('Glass2_Glass1_0');
+    const PlayButton = model.getObjectByName('PlayButton');
+    const PauseButton = model.getObjectByName('PauseButton');
+    const ForwardButton = model.getObjectByName('ForwardButton');
+    const BackwardButton = model.getObjectByName('BackwardButton');
+    Glass1 = model.getObjectByName('Glass1');
+    Glass2_Glass1_0 = model.getObjectByName('Glass2_Glass1_0');
 
     console.log("Buttons and Screens:", {
-        playButton,
-        pauseButton,
-        forwardButton,
-        backwardButton,
-        glass2,
-        glass2Glass1_0
+        PlayButton,
+        PauseButton,
+        ForwardButton,
+        BackwardButton,
+        Glass1,
+        Glass2_Glass1_0
     });
 
-    if (!playButton || !pauseButton || !forwardButton || !backwardButton || !glass2 || !glass2Glass1_0) {
+    if (!PlayButton || !PauseButton || !ForwardButton || !BackwardButton || !Glass1 || !Glass2_Glass1_0) {
         console.error('One or more buttons or the screen textures are not found on the model.');
         return;
     }
-    playButton.userData = { action: () => { console.log('Play button pressed.'); playAudio(audioFiles[currentAudioIndex]); } };
-    pauseButton.userData = { action: () => { console.log('Pause button pressed.'); pauseAudio(); } };
-    forwardButton.userData = { action: () => { console.log('Forward button pressed.'); nextAudio(); } };
-    backwardButton.userData = { action: () => { console.log('Backward button pressed.'); previousAudio(); } };
+    PlayButton.userData = { action: () => { console.log('Play button pressed.'); playAudio(audioFiles[currentAudioIndex]); } };
+    PauseButton.userData = { action: () => { console.log('Pause button pressed.'); pauseAudio(); } };
+    ForwardButton.userData = { action: () => { console.log('Forward button pressed.'); nextAudio(); } };
+    BackwardButton.userData = { action: () => { console.log('Backward button pressed.'); previousAudio(); } };
 
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
@@ -276,11 +276,11 @@ function setupModelControls() {
 
     window.addEventListener('mousedown', onDocumentMouseDown, false);
 
-    playButton.userData.action = () => {
+    PlayButton.userData.action = () => {
         console.log('Play button pressed.');
         playAudio(audioFiles[currentAudioIndex]);
-        glass2.material = shaderMaterial1;
-        glass2Glass1_0.material = shaderMaterial1;
+        Glass1.material = shaderMaterial1;
+        Glass2_Glass1_0.material = shaderMaterial1;
     };
 }
 
@@ -322,18 +322,18 @@ function playAudio(url) {
 
     // Change shader based on the current audio track
     if (url === audioFiles[1]) { // Check if the second audio file is played
-        if (glass2 && glass2Glass1_0) {
-            glass2.material = shaderMaterial2;
-            glass2Glass1_0.material = shaderMaterial2;
+        if (Glass1 && Glass2_Glass1_0) {
+            Glass1.material = shaderMaterial2;
+            Glass2_Glass1_0.material = shaderMaterial2;
         } else {
-            console.error('glass2 or glass2Glass1_0 is not defined');
+            console.error('Glass1 or Glass2_Glass1_0 is not defined');
         }
     } else {
-        if (glass2 && glass2Glass1_0) {
-            glass2.material = shaderMaterial1;
-            glass2Glass1_0.material = shaderMaterial1;
+        if (Glass1 && Glass2_Glass1_0) {
+            Glass1.material = shaderMaterial1;
+            Glass2_Glass1_0.material = shaderMaterial1;
         } else {
-            console.error('glass2 or glass2Glass1_0 is not defined');
+            console.error('Glass1 or Glass2_Glass1_0 is not defined');
         }
     }
 }
