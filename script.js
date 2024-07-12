@@ -6,7 +6,6 @@ const vertexShader = `
     }
 `;
 
-// Corrected fragmentShader1
 const fragmentShader1 = `
 // First Shader Code
 uniform float iTime;
@@ -77,6 +76,9 @@ float fbm( vec2 p )
     f += 0.500000*noise( p + iTime  ); p = mtx*p*2.02;
     f += 0.031250*noise( p ); p = mtx*p*2.01;
     f += 0.250000*noise( p ); p = mtx*p*2.03;
+    f += 0.500000*noise( p + iTime  ); p = mtx*p*2.02;
+    f += 0.031250*noise( p ); p = mtx*p*2.01;
+    f += 0.250000*noise( p ); p = mtx*p*2.03;
     f += 0.125000*noise( p ); p = mtx*p*2.01;
     f += 0.062500*noise( p ); p = mtx*p*2.04;
     f += 0.015625*noise( p + sin(iTime) );
@@ -140,6 +142,7 @@ let audioFiles = [
 ];
 let currentAudioIndex = 0;
 let Glass2, Glass2_Glass1_0;
+
 init();
 animate();
 
@@ -331,6 +334,7 @@ function playAudio(url) {
     // Change shader based on the current audio track
     if (url === audioFiles[1]) { // Check if the second audio file is played
         if (Glass2 && Glass2_Glass1_0) {
+            console.log('Applying shaderMaterial2');
             Glass2.material = shaderMaterial2;
             Glass2_Glass1_0.material = shaderMaterial2;
         } else {
@@ -338,6 +342,7 @@ function playAudio(url) {
         }
     } else {
         if (Glass2 && Glass2_Glass1_0) {
+            console.log('Applying shaderMaterial1');
             Glass2.material = shaderMaterial1;
             Glass2_Glass1_0.material = shaderMaterial1;
         } else {
@@ -361,3 +366,4 @@ function previousAudio() {
     currentAudioIndex = (currentAudioIndex - 1 + audioFiles.length) % audioFiles.length;
     playAudio(audioFiles[currentAudioIndex]);
 }
+
