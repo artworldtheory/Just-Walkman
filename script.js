@@ -6,6 +6,7 @@ const vertexShader = `
     }
 `;
 
+// Corrected fragmentShader1
 const fragmentShader1 = `
 // First Shader Code
 uniform float iTime;
@@ -88,17 +89,24 @@ float pattern( in vec2 p )
     return fbm( p + fbm( p + fbm( p ) ) );
 }
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
-{
-    vec2 uv = fragCoord/iResolution.x;
+void main() {
+    vec2 uv = vUv * iResolution.xy;
     float shade = pattern(uv);
-    fragColor = vec4(colormap(shade).rgb, shade);
+    gl_FragColor = vec4(colormap(shade).rgb, shade);
 }
 `;
 
 const fragmentShader2 = `
 // Second Shader Code
-// Your existing shader code here
+uniform float iTime;
+uniform vec2 iResolution;
+varying vec2 vUv;
+
+void main() {
+    vec2 uv = vUv * iResolution.xy;
+    vec3 col = 0.5 + 0.5 * cos(iTime + uv.xyx + vec3(0, 2, 4));
+    gl_FragColor = vec4(col, 1.0);
+}
 `;
 
 // Shader Materials
