@@ -129,7 +129,7 @@ const shaderMaterial2 = new THREE.ShaderMaterial({
     fragmentShader: fragmentShader2
 });
 
-let video, videoTexture, videoMaterial;
+let video, videoTexture, videoMaterial, videoPlane;
 
 let scene, camera, renderer, model, controls;
 const container = document.getElementById('container');
@@ -244,6 +244,12 @@ function init() {
     videoTexture.format = THREE.RGBFormat;
 
     videoMaterial = new THREE.MeshBasicMaterial({ map: videoTexture });
+
+    // Create plane for video
+    const videoPlaneGeometry = new THREE.PlaneGeometry(100, 100);
+    videoPlane = new THREE.Mesh(videoPlaneGeometry, videoMaterial);
+    videoPlane.scale.set(0.5, 0.5, 0.5); // Scale down by 50%
+    scene.add(videoPlane);
 }
 
 function setupModelControls() {
@@ -358,8 +364,9 @@ function playAudio(url) {
     } else if (url === audioFiles[2]) { // Check if the third audio file is played
         if (Glass2 && Glass2_Glass1_0) {
             console.log('Applying videoMaterial');
-            Glass2.material = videoMaterial;
-            Glass2_Glass1_0.material = videoMaterial;
+            Glass2.material = shaderMaterial1;
+            Glass2_Glass1_0.material = shaderMaterial1;
+            videoPlane.material = videoMaterial;
             video.play();
         } else {
             console.error('Glass2 or Glass2_Glass1_0 is not defined');
