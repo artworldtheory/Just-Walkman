@@ -111,7 +111,6 @@ void main() {
 }
 `;
 
-// Shader Materials
 const shaderMaterial1 = new THREE.ShaderMaterial({
     uniforms: {
         iTime: { value: 0 },
@@ -257,7 +256,16 @@ function setupModelControls() {
         console.error('One or more buttons or the screen textures are not found on the model.');
         return;
     }
-    PlayButton.userData = { action: () => { console.log('Play button pressed.'); playAudio(audioFiles[currentAudioIndex]); } };
+
+    PlayButton.userData = {
+        action: () => {
+            console.log('Play button pressed.');
+            playAudio(audioFiles[currentAudioIndex]);
+            Glass2.material = shaderMaterial1;
+            Glass2_Glass1_0.material = shaderMaterial1;
+        }
+    };
+
     PauseButton.userData = { action: () => { console.log('Pause button pressed.'); pauseAudio(); } };
     ForwardButton.userData = { action: () => { console.log('Forward button pressed.'); nextAudio(); } };
     BackwardButton.userData = { action: () => { console.log('Backward button pressed.'); previousAudio(); } };
@@ -286,13 +294,6 @@ function setupModelControls() {
     }
 
     window.addEventListener('mousedown', onDocumentMouseDown, false);
-
-    PlayButton.userData.action = () => {
-        console.log('Play button pressed.');
-        playAudio(audioFiles[currentAudioIndex]);
-        Glass2.material = shaderMaterial1;
-        Glass2_Glass1_0.material = shaderMaterial1;
-    };
 }
 
 function onWindowResize() {
@@ -331,7 +332,6 @@ function playAudio(url) {
         });
     }
 
-    // Change shader based on the current audio track
     if (url === audioFiles[1]) { // Check if the second audio file is played
         if (Glass2 && Glass2_Glass1_0) {
             console.log('Applying shaderMaterial2');
@@ -366,4 +366,3 @@ function previousAudio() {
     currentAudioIndex = (currentAudioIndex - 1 + audioFiles.length) % audioFiles.length;
     playAudio(audioFiles[currentAudioIndex]);
 }
-
