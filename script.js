@@ -219,7 +219,7 @@ function init() {
 
         setupModelControls();
         loadingScreen.style.display = 'none';
-        container.style.display = 'block';
+        container.style.display = 'block');
     }, undefined, function (error) {
         console.error('Error loading model:', error);
     });
@@ -246,9 +246,10 @@ function init() {
     videoMaterial = new THREE.MeshBasicMaterial({ map: videoTexture });
 
     // Create plane for video
-    const videoPlaneGeometry = new THREE.PlaneGeometry(100, 100);
+    const videoPlaneGeometry = new THREE.PlaneGeometry(50, 50); // Scale down by 50%
     videoPlane = new THREE.Mesh(videoPlaneGeometry, videoMaterial);
-    videoPlane.scale.set(0.5, 0.5, 0.5); // Scale down by 50%
+    videoPlane.position.set(0, 0, 10); // Adjust position to place in front of Glass2
+    videoPlane.visible = false;
     scene.add(videoPlane);
 }
 
@@ -366,7 +367,7 @@ function playAudio(url) {
             console.log('Applying videoMaterial');
             Glass2.material = shaderMaterial1;
             Glass2_Glass1_0.material = shaderMaterial1;
-            videoPlane.material = videoMaterial;
+            videoPlane.visible = true;
             video.play();
         } else {
             console.error('Glass2 or Glass2_Glass1_0 is not defined');
@@ -376,6 +377,8 @@ function playAudio(url) {
             console.log('Applying shaderMaterial1');
             Glass2.material = shaderMaterial1;
             Glass2_Glass1_0.material = shaderMaterial1;
+            videoPlane.visible = false;
+            video.pause();
         } else {
             console.error('Glass2 or Glass2_Glass1_0 is not defined');
         }
@@ -400,3 +403,4 @@ function previousAudio() {
     currentAudioIndex = (currentAudioIndex - 1 + audioFiles.length) % audioFiles.length;
     playAudio(audioFiles[currentAudioIndex]);
 }
+
