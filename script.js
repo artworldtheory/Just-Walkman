@@ -129,6 +129,8 @@ const shaderMaterial2 = new THREE.ShaderMaterial({
     fragmentShader: fragmentShader2
 });
 
+let video, videoTexture, videoMaterial;
+
 let scene, camera, renderer, model, controls;
 const container = document.getElementById('container');
 const loadingScreen = document.getElementById('loadingScreen');
@@ -229,6 +231,19 @@ function init() {
     listener = new THREE.AudioListener();
     camera.add(listener);
     audioLoader = new THREE.AudioLoader();
+
+    // Load video and create texture
+    video = document.createElement('video');
+    video.src = 'Untitled.mp4';
+    video.load();
+    video.loop = true;
+
+    videoTexture = new THREE.VideoTexture(video);
+    videoTexture.minFilter = THREE.LinearFilter;
+    videoTexture.magFilter = THREE.LinearFilter;
+    videoTexture.format = THREE.RGBFormat;
+
+    videoMaterial = new THREE.MeshBasicMaterial({ map: videoTexture });
 }
 
 function setupModelControls() {
@@ -340,6 +355,15 @@ function playAudio(url) {
         } else {
             console.error('Glass2 or Glass2_Glass1_0 is not defined');
         }
+    } else if (url === audioFiles[2]) { // Check if the third audio file is played
+        if (Glass2 && Glass2_Glass1_0) {
+            console.log('Applying videoMaterial');
+            Glass2.material = videoMaterial;
+            Glass2_Glass1_0.material = videoMaterial;
+            video.play();
+        } else {
+            console.error('Glass2 or Glass2_Glass1_0 is not defined');
+        }
     } else {
         if (Glass2 && Glass2_Glass1_0) {
             console.log('Applying shaderMaterial1');
@@ -354,6 +378,9 @@ function playAudio(url) {
 function pauseAudio() {
     if (sound && sound.isPlaying) {
         sound.pause();
+    }
+    if (video && !video.paused) {
+        video.pause();
     }
 }
 
