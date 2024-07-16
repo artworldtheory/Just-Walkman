@@ -85,8 +85,6 @@ let video, videoTexture, videoMaterial, scene, camera, renderer, model, controls
 let audioFiles = ['Audio/11_WIP_.mp3', 'Audio/86_WIP_.mp3', 'Audio/90 V1_WIP_.mp3', 'Audio/91_WIP_.mp3'];
 let currentAudioIndex = 0, Glass2, Glass2_Glass1_0;
 
-init();
-
 function init() {
     console.log('Initializing scene...');
     initializeScene();
