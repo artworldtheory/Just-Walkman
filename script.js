@@ -91,8 +91,6 @@ function init() {
     initializeCamera();
     initializeRenderer();
     initializeLights();
-    createLoadingScreen();
-    loadResources();
     loadModel();
     setupAudio();
     setupVideo();
@@ -145,8 +143,6 @@ function loadModel() {
         scene.add(model);
         setupControls();
         setupModelControls();
-        document.getElementById('loadingScreen').style.display = 'none';
-        document.getElementById('container').style.display = 'block';
         animate(); // Start the animation loop after everything is set up
     }, undefined, (error) => console.error('Error loading model:', error));
 }
@@ -296,42 +292,4 @@ function setupVideo() {
     videoTexture.magFilter = THREE.LinearFilter;
     videoTexture.format = THREE.RGBFormat;
     videoMaterial = new THREE.MeshBasicMaterial({ map: videoTexture });
-}
-
-function loadResources() {
-    console.log('Loading resources...');
-    // Simulate resource loading with a percentage counter
-    let loaded = 0;
-    const total = 100; // Adjust based on actual resources
-
-    const interval = setInterval(() => {
-        loaded++;
-        console.log(`Loaded: ${loaded}%`); // Debug: Log loading progress
-        updateLoadingPercentage(loaded);
-        if (loaded >= total) {
-            clearInterval(interval);
-            console.log('Loading complete');
-            document.getElementById('loadingScreen').style.display = 'none';
-            document.getElementById('container').style.display = 'block';
-        }
-    }, 50); // Adjust timing as necessary
-}
-
-function updateLoadingPercentage(percent) {
-    const loadingPercentElement = document.getElementById('loadingPercent');
-    if (loadingPercentElement) {
-        console.log(`Updating percentage: ${percent}%`); // Debug: Log percentage update
-        loadingPercentElement.innerText = percent + '%';
-    } else {
-        console.error('Loading percentage element not found');
-    }
-}
-
-function createLoadingScreen() {
-    console.log('Creating loading screen...');
-    const loadingScreen = document.createElement('div');
-    loadingScreen.id = 'loadingScreen';
-    loadingScreen.innerHTML = '<div id="loadingText">Loading... <span id="loadingPercent">0%</span></div>';
-    document.body.appendChild(loadingScreen);
-    console.log('Loading screen created');
 }
