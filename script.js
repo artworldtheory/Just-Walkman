@@ -97,7 +97,6 @@ function init() {
     setupAudio();
     setupVideo();
     setupEventListeners();
-    animate();
 }
 
 function initializeScene() {
@@ -142,6 +141,7 @@ function loadModel() {
         setupModelControls();
         document.getElementById('loadingScreen').style.display = 'none';
         document.getElementById('container').style.display = 'block';
+        animate(); // Start the animation loop after everything is set up
     }, undefined, (error) => console.error('Error loading model:', error));
 }
 
@@ -202,7 +202,9 @@ function onWindowResize() {
 
 function animate() {
     requestAnimationFrame(animate);
-    controls.update(); // Ensure controls are defined before calling update
+    if (controls) {
+        controls.update(); // Ensure controls are defined before calling update
+    }
     const time = performance.now() / 1000;
     shaderMaterial1.uniforms.iTime.value = time;
     shaderMaterial2.uniforms.iTime.value = time;
