@@ -295,6 +295,7 @@ function loadResources() {
 
     const interval = setInterval(() => {
         loaded++;
+        console.log(`Loaded: ${loaded}%`); // Debug: Log loading progress
         updateLoadingPercentage(loaded);
         if (loaded >= total) {
             clearInterval(interval);
@@ -307,7 +308,10 @@ function loadResources() {
 function updateLoadingPercentage(percent) {
     const loadingPercentElement = document.getElementById('loadingPercent');
     if (loadingPercentElement) {
+        console.log(`Updating percentage: ${percent}%`); // Debug: Log percentage update
         loadingPercentElement.innerText = percent + '%';
+    } else {
+        console.error('Loading percentage element not found');
     }
 }
 
