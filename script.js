@@ -88,6 +88,7 @@ let currentAudioIndex = 0, Glass2, Glass2_Glass1_0;
 init();
 
 function init() {
+    console.log('Initializing scene...');
     initializeScene();
     initializeCamera();
     initializeRenderer();
@@ -101,16 +102,19 @@ function init() {
 }
 
 function initializeScene() {
+    console.log('Initializing scene...');
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x1a1a1a);
 }
 
 function initializeCamera() {
+    console.log('Initializing camera...');
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
     camera.position.set(0, 50, 20);
 }
 
 function initializeRenderer() {
+    console.log('Initializing renderer...');
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setClearColor(0x1a1a1a);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -119,6 +123,7 @@ function initializeRenderer() {
 }
 
 function initializeLights() {
+    console.log('Initializing lights...');
     scene.add(new THREE.AmbientLight(0xffffff, 2));
     const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
     hemiLight.position.set(0, 200, 0);
@@ -132,8 +137,10 @@ function initializeLights() {
 }
 
 function loadModel() {
+    console.log('Loading model...');
     const loader = new THREE.GLTFLoader();
     loader.load('Buttons/Buttons2.gltf', (gltf) => {
+        console.log('Model loaded');
         model = gltf.scene;
         model.position.set(0, 0, 0);
         model.scale.set(400, 400, 400);
@@ -147,6 +154,7 @@ function loadModel() {
 }
 
 function setupControls() {
+    console.log('Setting up controls...');
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.25;
@@ -155,6 +163,7 @@ function setupControls() {
 }
 
 function setupModelControls() {
+    console.log('Setting up model controls...');
     const playButton = model.getObjectByName('PlayButton');
     const pauseButton = model.getObjectByName('PauseButton');
     const forwardButton = model.getObjectByName('ForwardButton');
@@ -176,6 +185,7 @@ function setupModelControls() {
 }
 
 function setupEventListeners() {
+    console.log('Setting up event listeners...');
     window.addEventListener('resize', onWindowResize, false);
 }
 
@@ -271,12 +281,14 @@ function createShaderMaterial(fragmentShader) {
 }
 
 function setupAudio() {
+    console.log('Setting up audio...');
     listener = new THREE.AudioListener();
     camera.add(listener);
     audioLoader = new THREE.AudioLoader();
 }
 
 function setupVideo() {
+    console.log('Setting up video...');
     video = document.createElement('video');
     video.src = 'Untitled.mp4';
     video.load();
@@ -289,6 +301,7 @@ function setupVideo() {
 }
 
 function loadResources() {
+    console.log('Loading resources...');
     // Simulate resource loading with a percentage counter
     let loaded = 0;
     const total = 100; // Adjust based on actual resources
@@ -299,6 +312,7 @@ function loadResources() {
         updateLoadingPercentage(loaded);
         if (loaded >= total) {
             clearInterval(interval);
+            console.log('Loading complete');
             document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('container').style.display = 'block';
         }
@@ -316,8 +330,10 @@ function updateLoadingPercentage(percent) {
 }
 
 function createLoadingScreen() {
+    console.log('Creating loading screen...');
     const loadingScreen = document.createElement('div');
     loadingScreen.id = 'loadingScreen';
     loadingScreen.innerHTML = '<div id="loadingText">Loading... <span id="loadingPercent">0%</span></div>';
     document.body.appendChild(loadingScreen);
+    console.log('Loading screen created');
 }
