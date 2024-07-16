@@ -92,6 +92,7 @@ function init() {
     initializeCamera();
     initializeRenderer();
     initializeLights();
+    createLoadingScreen();
     loadResources();
     loadModel();
     setupAudio();
@@ -304,5 +305,15 @@ function loadResources() {
 }
 
 function updateLoadingPercentage(percent) {
-    document.getElementById('loadingPercent').innerText = percent + '%';
+    const loadingPercentElement = document.getElementById('loadingPercent');
+    if (loadingPercentElement) {
+        loadingPercentElement.innerText = percent + '%';
+    }
+}
+
+function createLoadingScreen() {
+    const loadingScreen = document.createElement('div');
+    loadingScreen.id = 'loadingScreen';
+    loadingScreen.innerHTML = '<div id="loadingText">Loading... <span id="loadingPercent">0%</span></div>';
+    document.body.appendChild(loadingScreen);
 }
