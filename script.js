@@ -86,17 +86,18 @@ let audioFiles = ['Audio/11_WIP_.mp3', 'Audio/86_WIP_.mp3', 'Audio/90 V1_WIP_.mp
 let currentAudioIndex = 0, Glass2, Glass2_Glass1_0;
 
 init();
-animate();
 
 function init() {
     initializeScene();
     initializeCamera();
     initializeRenderer();
     initializeLights();
+    loadResources();
     loadModel();
-    setupEventListeners();
     setupAudio();
     setupVideo();
+    setupEventListeners();
+    animate();
 }
 
 function initializeScene() {
@@ -137,15 +138,19 @@ function loadModel() {
         model.position.set(0, 0, 0);
         model.scale.set(400, 400, 400);
         scene.add(model);
-        controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.25;
-        controls.screenSpacePanning = false;
-        controls.maxPolarAngle = Math.PI / 2;
+        setupControls();
         setupModelControls();
         document.getElementById('loadingScreen').style.display = 'none';
         document.getElementById('container').style.display = 'block';
     }, undefined, (error) => console.error('Error loading model:', error));
+}
+
+function setupControls() {
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25;
+    controls.screenSpacePanning = false;
+    controls.maxPolarAngle = Math.PI / 2;
 }
 
 function setupModelControls() {
@@ -197,7 +202,7 @@ function onWindowResize() {
 
 function animate() {
     requestAnimationFrame(animate);
-    controls.update();
+    controls.update(); // Ensure controls are defined before calling update
     const time = performance.now() / 1000;
     shaderMaterial1.uniforms.iTime.value = time;
     shaderMaterial2.uniforms.iTime.value = time;
@@ -278,4 +283,24 @@ function setupVideo() {
     videoTexture.magFilter = THREE.LinearFilter;
     videoTexture.format = THREE.RGBFormat;
     videoMaterial = new THREE.MeshBasicMaterial({ map: videoTexture });
+}
+
+function loadResources() {
+    // Simulate resource loading with a percentage counter
+    let loaded = 0;
+    const total = 100; // Adjust based on actual resources
+
+    const interval = setInterval(() => {
+        loaded++;
+        updateLoadingPercentage(loaded);
+        if (loaded >= total) {
+            clearInterval(interval);
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('container').style.display = 'block';
+        }
+    }, 50); // Adjust timing as necessary
+}
+
+function updateLoadingPercentage(percent) {
+    document.getElementById('loadingPercent').innerText = percent + '%';
 }
