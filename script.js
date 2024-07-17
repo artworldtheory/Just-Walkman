@@ -13,7 +13,6 @@ function init() {
     setupAudio();
     setupEventListeners();
     loadModel();
-    render(); // Render the scene once after initialization
 }
 
 function initializeScene() {
@@ -57,12 +56,12 @@ function loadModel() {
     loader.load('Buttons/Buttons2.gltf', (gltf) => {
         console.log('Model loaded');
         model = gltf.scene;
+        console.log(model); // Log the model to check its structure
         model.position.set(0, 0, 0);
         model.scale.set(400, 400, 400);
         scene.add(model);
         setupControls();
         setupModelControls();
-        render(); // Render the scene after the model is loaded
     }, undefined, (error) => console.error('Error loading model:', error));
 }
 
@@ -123,12 +122,18 @@ function onWindowResize() {
     render(); // Render the scene after resizing
 }
 
+function animate() {
+    requestAnimationFrame(animate);
+    render();
+}
+
 function render() {
     if (!scene || !camera) {
         console.error('Scene or camera is not defined');
         return;
     }
     try {
+        controls.update(); // Update controls for damping to work
         renderer.render(scene, camera);
     } catch (error) {
         console.error('Error during rendering:', error);
@@ -172,5 +177,6 @@ function setupAudio() {
     audioLoader = new THREE.AudioLoader();
 }
 
-// Initialize the scene
+// Initialize the scene and start the animation loop
 init();
+animate();
