@@ -14,6 +14,7 @@ function init() {
     setupAudio();
     setupVideo();
     setupEventListeners();
+    render(); // Render the scene once after initialization
 }
 
 function initializeScene() {
@@ -62,7 +63,7 @@ function loadModel() {
         scene.add(model);
         setupControls();
         setupModelControls();
-        animate(); // Start the animation loop after everything is set up
+        render(); // Render the scene after the model is loaded
     }, undefined, (error) => console.error('Error loading model:', error));
 }
 
@@ -120,16 +121,13 @@ function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    render(); // Render the scene after resizing
 }
 
-function animate() {
-    requestAnimationFrame(animate);
-    if (controls) {
-        controls.update(); // Ensure controls are defined before calling update
-    }
-    // Add logging to identify which object might be causing the issue
+function render() {
     if (!scene || !camera) {
         console.error('Scene or camera is not defined');
+        return;
     }
     try {
         renderer.render(scene, camera);
