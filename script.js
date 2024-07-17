@@ -10,10 +10,10 @@ function init() {
     initializeCamera();
     initializeRenderer();
     initializeLights();
+    loadModel();
     setupAudio();
     setupVideo();
     setupEventListeners();
-    loadModel();
     render(); // Render the scene once after initialization
 }
 
@@ -27,7 +27,6 @@ function initializeCamera() {
     console.log('Initializing camera...');
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
     camera.position.set(0, 50, 20);
-    camera.add(listener);
 }
 
 function initializeRenderer() {
@@ -201,6 +200,3 @@ function setupVideo() {
     videoTexture.format = THREE.RGBFormat;
     videoMaterial = new THREE.MeshBasicMaterial({ map: videoTexture });
 }
-
-// Initialize the scene
-init();
