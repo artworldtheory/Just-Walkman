@@ -127,7 +127,15 @@ function animate() {
     if (controls) {
         controls.update(); // Ensure controls are defined before calling update
     }
-    renderer.render(scene, camera);
+    // Add logging to identify which object might be causing the issue
+    if (!scene || !camera) {
+        console.error('Scene or camera is not defined');
+    }
+    try {
+        renderer.render(scene, camera);
+    } catch (error) {
+        console.error('Error during rendering:', error);
+    }
 }
 
 function playAudio(url) {
