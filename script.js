@@ -13,7 +13,6 @@ function init() {
     setupVideo();
     setupControls(); // Ensure controls are initialized
     setupEventListeners();
-    animate(); // Start the animation loop instead of a single render call
 }
 
 function initializeScene() {
@@ -61,6 +60,7 @@ function loadModel() {
         model.scale.set(400, 400, 400);
         scene.add(model);
         setupModelControls();
+        animate(); // Start animation loop only after model is loaded
     }, undefined, (error) => console.error('Error loading model:', error));
 }
 
@@ -133,7 +133,9 @@ function render() {
         return;
     }
     try {
-        renderer.render(scene, camera);
+        if (model) { // Ensure model is fully loaded
+            renderer.render(scene, camera);
+        }
     } catch (error) {
         console.error('Error during rendering:', error);
     }
