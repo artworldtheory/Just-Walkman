@@ -1,6 +1,6 @@
 // script.js
 
-let video, videoTexture, videoMaterial, scene, camera, renderer, model, controls, listener, sound;
+let scene, camera, renderer, model, controls, listener, sound, audioLoader;
 let audioFiles = ['Audio/11_WIP_.mp3', 'Audio/86_WIP_.mp3', 'Audio/90 V1_WIP_.mp3', 'Audio/91_WIP_.mp3'];
 let currentAudioIndex = 0, Glass2, Glass2_Glass1_0;
 
@@ -11,7 +11,6 @@ function init() {
     initializeRenderer();
     initializeLights();
     setupAudio();
-    setupVideo();
     setupEventListeners();
     loadModel();
     render(); // Render the scene once after initialization
@@ -27,7 +26,6 @@ function initializeCamera() {
     console.log('Initializing camera...');
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
     camera.position.set(0, 50, 20);
-    camera.add(listener);
 }
 
 function initializeRenderer() {
@@ -151,7 +149,6 @@ function playAudio(url) {
 
 function pauseAudio() {
     if (sound && sound.isPlaying) sound.pause();
-    if (video && !video.paused) video.pause();
 }
 
 function nextAudio() {
@@ -165,21 +162,7 @@ function previousAudio() {
 }
 
 function updateMaterials(url) {
-    if (url === audioFiles[1]) {
-        applyMaterial(videoMaterial); // Apply video material if the second audio file is playing
-        video.play();
-    } else {
-        applyMaterial(null); // Clear the material for other audio files
-    }
-}
-
-function applyMaterial(material) {
-    if (Glass2 && Glass2_Glass1_0) {
-        Glass2.material = material;
-        Glass2_Glass1_0.material = material;
-    } else {
-        console.error('Glass2 or Glass2_Glass1_0 is not defined');
-    }
+    // Custom material updates based on audio file
 }
 
 function setupAudio() {
@@ -187,19 +170,6 @@ function setupAudio() {
     listener = new THREE.AudioListener();
     camera.add(listener);
     audioLoader = new THREE.AudioLoader();
-}
-
-function setupVideo() {
-    console.log('Setting up video...');
-    video = document.createElement('video');
-    video.src = 'Untitled.mp4';
-    video.load();
-    video.loop = true;
-    videoTexture = new THREE.VideoTexture(video);
-    videoTexture.minFilter = THREE.LinearFilter;
-    videoTexture.magFilter = THREE.LinearFilter;
-    videoTexture.format = THREE.RGBFormat;
-    videoMaterial = new THREE.MeshBasicMaterial({ map: videoTexture });
 }
 
 // Initialize the scene
