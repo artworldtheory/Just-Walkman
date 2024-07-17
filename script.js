@@ -1,5 +1,3 @@
-// script.js
-
 let video, videoTexture, videoMaterial, scene, camera, renderer, model, controls, listener, sound;
 let audioFiles = ['Audio/11_WIP_.mp3', 'Audio/86_WIP_.mp3', 'Audio/90 V1_WIP_.mp3', 'Audio/91_WIP_.mp3'];
 let currentAudioIndex = 0, Glass2, Glass2_Glass1_0;
@@ -13,8 +11,9 @@ function init() {
     loadModel();
     setupAudio();
     setupVideo();
+    setupControls(); // Ensure controls are initialized
     setupEventListeners();
-    render(); // Render the scene once after initialization
+    animate(); // Start the animation loop instead of a single render call
 }
 
 function initializeScene() {
@@ -61,9 +60,7 @@ function loadModel() {
         model.position.set(0, 0, 0);
         model.scale.set(400, 400, 400);
         scene.add(model);
-        setupControls();
         setupModelControls();
-        render(); // Render the scene after the model is loaded
     }, undefined, (error) => console.error('Error loading model:', error));
 }
 
@@ -122,6 +119,12 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
     render(); // Render the scene after resizing
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    controls.update(); // Only required if controls.enableDamping = true, or if controls.autoRotate = true
+    render();
 }
 
 function render() {
