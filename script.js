@@ -1,124 +1,3 @@
-const vertexShader = `
-    varying vec2 vUv;
-    void main() {
-        vUv = uv;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
-`;
-
-const fragmentShader1 = `
-// First Shader Code
-uniform float iTime;
-uniform vec2 iResolution;
-varying vec2 vUv;
-
-float colormap_red(float x) {
-    if (x < 0.0) {
-        return 54.0 / 255.0;
-    } else if (x < 20049.0 / 82979.0) {
-        return (829.79 * x + 54.51) / 255.0;
-    } else {
-        return 1.0;
-    }
-}
-
-float colormap_green(float x) {
-    if (x < 20049.0 / 82979.0) {
-        return 0.0;
-    } else if (x < 327013.0 / 810990.0) {
-        return (8546482679670.0 / 10875673217.0 * x - 2064961390770.0 / 10875673217.0) / 255.0;
-    } else if (x <= 1.0) {
-        return (103806720.0 / 483977.0 * x + 19607415.0 / 483977.0) / 255.0;
-    } else {
-        return 1.0;
-    }
-}
-
-float colormap_blue(float x) {
-    if (x < 0.0) {
-        return 54.0 / 255.0;
-    } else if (x < 7249.0 / 82979.0) {
-        return (829.79 * x + 54.51) / 255.0;
-    } else if (x < 20049.0 / 82979.0) {
-        return 127.0 / 255.0;
-    } else if (x < 327013.0 / 810990.0) {
-        return (792.02249341361393720147485376583 * x - 64.364790735602331034989206222672) / 255.0;
-    } else {
-        return 1.0;
-    }
-}
-
-vec4 colormap(float x) {
-    return vec4(colormap_red(x), colormap_green(x), colormap_blue(x), 1.0);
-}
-
-float rand(vec2 n) { 
-    return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
-}
-
-float noise(vec2 p){
-    vec2 ip = floor(p);
-    vec2 u = fract(p);
-    u = u*u*(3.0-2.0*u);
-
-    float res = mix(
-        mix(rand(ip),rand(ip+vec2(1.0,0.0)),u.x),
-        mix(rand(ip+vec2(0.0,1.0)),rand(ip+vec2(1.0,1.0)),u.x),u.y);
-    return res*res;
-}
-
-const mat2 mtx = mat2( 0.80,  0.60, -0.60,  0.80 );
-
-float fbm( vec2 p )
-{
-    float f = 0.0;
-
-    f += 0.500000*noise( p + iTime  ); p = mtx*p*2.02;
-    f += 0.031250*noise( p ); p = mtx*p*2.01;
-    f += 0.250000*noise( p ); p = mtx*p*2.03;
-    f += 0.125000*noise( p ); p = mtx*p*2.01;
-    f += 0.062500*noise( p ); p = mtx*p*2.04;
-    f += 0.015625*noise( p + sin(iTime) );
-
-    return f/0.96875;
-}
-
-float pattern( in vec2 p )
-{
-    return fbm( p + fbm( p + fbm( p ) ) );
-}
-
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
-{
-    vec2 uv = fragCoord/iResolution.x;
-    float shade = pattern(uv);
-    fragColor = vec4(colormap(shade).rgb, shade);
-}
-`;
-
-const fragmentShader2 = `
-// Second Shader Code
-// Your existing shader code here
-`;
-
-// Shader Materials
-const shaderMaterial1 = new THREE.ShaderMaterial({
-    uniforms: {
-        iTime: { value: 0 },
-        iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
-    },
-    vertexShader: vertexShader,
-    fragmentShader: fragmentShader1
-});
-
-const shaderMaterial2 = new THREE.ShaderMaterial({
-    uniforms: {
-        iTime: { value: 0 },
-        iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
-    },
-    vertexShader: vertexShader,
-    fragmentShader: fragmentShader2
-});
 
 let scene, camera, renderer, model, controls;
 const container = document.getElementById('container');
@@ -219,8 +98,39 @@ function init() {
     listener = new THREE.AudioListener();
     camera.add(listener);
     audioLoader = new THREE.AudioLoader();
-}
 
+    // Create shader material
+    shaderMaterial = new THREE.ShaderMaterial({
+        vertexShader: `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `,
+        fragmentShader: `
+            uniform float iTime;
+            uniform vec2 iResolution;
+            varying vec2 vUv;
+
+            // Shadertoy shader code
+            void mainImage( out vec4 fragColor, in vec2 fragCoord )
+            {
+                vec2 uv = fragCoord / iResolution.xy;
+                vec3 col = 0.5 + 0.5 * cos(iTime + uv.xyx + vec3(0,2,4));
+                fragColor = vec4(col,1.0);
+            }
+
+            void main() {
+                mainImage(gl_FragColor, vUv * iResolution.xy);
+            }
+        `,
+        uniforms: {
+            iTime: { value: 0 },
+            iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+        }
+    });
+}
 function setupModelControls() {
     if (!model) {
         console.error('Model is not loaded.');
@@ -279,8 +189,8 @@ function setupModelControls() {
     playButton.userData.action = () => {
         console.log('Play button pressed.');
         playAudio(audioFiles[currentAudioIndex]);
-        glass2.material = shaderMaterial1; // Use the first shader initially
-        glass2Glass1_0.material = shaderMaterial1; // Use the first shader initially
+        glass2.material = shaderMaterial;
+        glass2Glass1_0.material = shaderMaterial;
     };
 }
 
@@ -288,16 +198,13 @@ function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    shaderMaterial1.uniforms.iResolution.value.set(window.innerWidth, window.innerHeight);
-    shaderMaterial2.uniforms.iResolution.value.set(window.innerWidth, window.innerHeight);
+    shaderMaterial.uniforms.iResolution.value.set(window.innerWidth, window.innerHeight);
 }
 
 function animate() {
     requestAnimationFrame(animate);
-    controls.update();
-    const time = performance.now() / 1000;
-    shaderMaterial1.uniforms.iTime.value = time;
-    shaderMaterial2.uniforms.iTime.value = time;
+    controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+    shaderMaterial.uniforms.iTime.value += 0.05; // Update time uniform
     renderer.render(scene, camera);
 }
 
@@ -318,15 +225,6 @@ function playAudio(url) {
             sound.setBuffer(buffer);
             sound.play();
         });
-    }
-
-    // Change shader based on the current audio track
-    if (url === audioFiles[1]) { // Check if the second audio file is played
-        glass2.material = shaderMaterial2;
-        glass2Glass1_0.material = shaderMaterial2;
-    } else {
-        glass2.material = shaderMaterial1;
-        glass2Glass1_0.material = shaderMaterial1;
     }
 }
 
